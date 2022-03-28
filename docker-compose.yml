@@ -1,0 +1,29 @@
+version: "3.4"
+
+volumes:
+  postgres_data:
+
+services:
+  test:
+    restart: unless-stopped
+    container_name: test
+    stdin_open: true
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+
+  db:
+    restart: unless-stopped
+    container_name: db
+    image: postgres:13
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tortoise
+      - POSTGRES_USER=tortoise
+      - POSTGRES_PASSWORD=pass
